@@ -3,13 +3,14 @@ import numpy as np
 
 data = []
 
-storage_size = open("build/plot_data/slow_storage_tx_time_store.txt", 'r')
+storage_size = open("build/plot_data/slow_storage_size.txt", 'r')
 while True:
+    timestamp = storage_size.readline()
     line = storage_size.readline()
     if line == '':
         break
-    timestamp, elapsed_time = line.split(' ')
-    data.append([float(timestamp), float(elapsed_time)])
+    size = line.split('M')
+    data.append([float(timestamp), float(size[0])])
 storage_size.close()
 
 data.sort()
@@ -19,8 +20,6 @@ y = [v[1] for v in data]
 
 x[:] = [v - min(x) for v in x]
 x[:] = [v / 60.0 for v in x]
-y_ = [np.mean(y[0:i]) for i in range(0, len(y))]
 
-plt.bar(x, y)
-plt.plot(x, y_, 'r.')
+plt.plot(x, y, 'r.')
 plt.show()
