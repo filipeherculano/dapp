@@ -29,10 +29,6 @@ sudo npm install
 
 This should take a while ...
 
-then, go to Ganache website, download their latest appimage, give all users executable permission
-chmod a+x ~/Downloads/Ganache-2.1.0.AppImage
-sudo ./Downloads/Ganache-.1.0.AppImage
-
 install IPFS by downloading it from page, extracting it and running the script
 
 https://dist.ipfs.io/#go-ipfs

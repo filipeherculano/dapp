@@ -17,7 +17,7 @@ function getRandom(min, max) {
 }
 
 function img_to_byte() {
-	var len = getRandom(1000, 5000); // Images from 1Kb to 5Kb
+	var len = getRandom(2500, 5000); // Images from 2.5Kb to 5Kb
 	var bytes = new Array(len);
 	for(var i = 0; i < len; i++) {
 		var value = getRandom(0,256).toString(16);
@@ -63,7 +63,7 @@ web3.eth.getAccounts().then(response => {
 		gas: 357801
 	}).then((newContractInstance) => {
 		SlowStorage.options.address = newContractInstance.options.address
-		var TEST_TIME = 20, TRANS_PER_SEC = 25;
+		var TEST_TIME = 5, TRANS_PER_SEC = 25;
 		var loop = TEST_TIME * TRANS_PER_SEC, hash;
 		for(var i = 0; i < loop; i++){
 			sleep(40); // Sleep for 40 miliseconds

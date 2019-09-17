@@ -13,7 +13,7 @@ async function log_store(size, timestamp, tx) {
 	var block_hash = await web3.eth.getTransaction(tx);
 	var block_timestamp = await web3.eth.getBlock(block_hash.blockHash);
 
-	var str = size + " " + (parseInt(block_timestamp.timestamp, 10)*1000 - timestamp);
+	var str = timestamp + " " + (parseInt(block_timestamp.timestamp, 10)*1000 - timestamp);
 	fs.appendFileSync("build/plot_data/slow_storage_tx_time_store.txt", str + "\n", (err) => {
 		if(err) console.log(err);
 	});

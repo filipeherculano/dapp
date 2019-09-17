@@ -21,8 +21,7 @@ def plot_data(path, title):
     y[:] = [v / 1000.0 for v in y]
     y_ = [np.mean(y[0:i]) for i in range(0, len(y))]
 
-    plt.bar(x, y)
-    plt.plot(x, y_, 'r.')
+    plt.plot(x, y, 'r.')
     plt.xlabel('data size (Kb)')
     plt.ylabel('time (s)')
     plt.title(title)

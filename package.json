@@ -7,6 +7,9 @@
   },
   "dependencies": {
     "fs": "0.0.1-security",
+    "ipfs": "^0.37.1",
+    "node-gyp": "^5.0.3",
+    "node-pre-gyp": "^0.13.0",
     "web3": "^1.2.1"
   }
 }
