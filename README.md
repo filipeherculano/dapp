@@ -5,12 +5,12 @@ Clone project, enter folder then Install nodejs and npm.
 ```
 git clone https://github.com/filipeherculano/dapp
 cd dapp
-sudo apt install nodejs npm python-pip solc
+sudo apt install nodejs npm python3-pip solc
 ```
 
 
 ```
-sudo pip install matplotlib
+sudo pip3 install matplotlib
 ```
 
 Then install truffle framework with npm. But before it, create a truffle folder inside your ~/.config folder. So the installation can run smoothly...

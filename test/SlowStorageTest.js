@@ -28,24 +28,21 @@ function img_to_byte() {
 async function store(response) {
 	var idx = getRandom(0, 1000);
 	var data = img_to_byte();
-	const gasEstimate = await SlowStorage.methods.storeData(data).estimateGas({from: response[idx]}).catch(function(error){
-		throw error;
-	});
-	const fee = getRandom(0, 118180); // 0.0013 ETH on fee avarage
+	const gasEstimate = await SlowStorage.methods.storeData(data).estimateGas({from: response[idx]});
+	const fee = getRandom(0, 118180); // 0.0013 ETH on avarage fee 
 	var before_call = Date.now();
-	await SlowStorage.methods.storeData(data).send({from : response[idx], gas: (gasEstimate + fee)}).on('transactionHash', function(value){
-		fs.appendFileSync("buffer.txt", data.length + " " + before_call + " " + value + "\n", (err) => {
-			if(err) console.log(err);
-		});
-	}).catch(function(error){
-		throw error;
+	var object = await SlowStorage.methods.storeData(data).send({from : response[idx], gas: (gasEstimate + fee)});
+	fs.appendFileSync("buffer.txt", before_call + " " + object.transactionHash + "\n", (err) => {
+		if(err) console.log(err);
 	});
 }
 
 async function retrieve(response) {
+	var idx = getRandom(0, 1000);
 	var before_call = Date.now();
-	SlowStorage.methods.retrieveDataArray(0).call({from: response[idx]}, function(error, result){
-		fs.appendFileSync("buffer.txt", before_call + " " + (Date.now() - item) + "\n", (err) => {
+	var promise = await SlowStorage.methods.retrieveDataArray(0).call({from: response[idx]});
+	promise.then(function(result){
+		fs.appendFileSync("buffer.txt", before_call + " " + (Date.now() - before_call) + "\n", (err) => {
 			if(err) console.log(err);
 		});
 	});
@@ -59,7 +56,7 @@ web3.eth.getAccounts().then(response => {
 		gas: 350815
 	}).then((newContractInstance) => {
 		SlowStorage.options.address = newContractInstance.options.address
-		var TEST_TIME = 5, TRANS_PER_SEC = 25;
+		var TEST_TIME = 10, TRANS_PER_SEC = 25;
 		var loop = TEST_TIME * TRANS_PER_SEC, hash;
 		var before_call = new Array(), data_imgs = new Array(), data_imgs_cpy = new Array(); 
 		for(var i = 0; i < loop; i++){
