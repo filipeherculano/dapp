@@ -1,4 +1,4 @@
-# Instalation
+# Installation
 
 Clone project, enter folder then Install nodejs and npm.
 
@@ -50,3 +50,14 @@ ipfs daemon
 ipfs swarm peers
 
 ipfs add -r <folder>
+
+# Usage
+
+First you'll need to start the chain and all tests within. They will put their data onto buffer.txt and build/plot_data/*.txt. The buffer.txt will be used and deleted afterwords.
+
+```
+sudo python3 scripts/python/start_chain.py
+sudo python3 scripts/python/plot.py
+```
+
+Make sure to run plot.py in another terminal, since you must still be running your local blockchain on ganache.
