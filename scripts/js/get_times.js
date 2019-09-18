@@ -25,7 +25,7 @@ fs.readFile("buffer.txt", (err, data) => {
 	for(var line of lines) {
 		if(line.length == 0) break;
 		var words = line.toString().split(" ");
-		if(words[2].length < 12) log_retrieve(words[0], words[2]); // If not a transaction hash
+		if(words[2].length < 12) log_retrieve(words[1], words[2]); // If not a transaction hash
 		else log_store(words[0], words[1], words[2]);
 	}
 });

@@ -1,7 +1,6 @@
 const Web3 = require("web3");
 const fs = require("fs");
 const IPFS = require("ipfs");
-const lockfile = require('proper-lockfile');
 
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 const abi = JSON.parse(fs.readFileSync("build/abi/FastStorageIPFS.abi").toString());
@@ -32,33 +31,29 @@ async function img_to_byte() {
 async function process(response) {
 	await ipfs.ready;
 	var idx = getRandom(0, 1000);
-	var data = img_to_byte();
+	var data = Array(img_to_byte());
 	const fee = getRandom(0, 118180); // 0.0013 ETH on avarage fee 
 
 	var before_call = Date.now();
-	ipfs.add(Buffer.from(data.valueOf()), function(err, res){
+	ipfs.add(Buffer.from(data), function(err, res){
 		if(err) throw new Error(err);
 		const hash = res[0].hash;
-		console.log(hash);
-		console.log(String(hash));
+		FastStorage.methods.storeData(hash).send({from : response[idx], gas: (106555 + fee)})
+			.once('receipt', function(receipt){
+				const str = hash.length + " " + before_call + " " + receipt.transactionHash + "\n";
+				fs.appendFileSync("buffer.txt", str, (err) => { throw new Error(err); });
+
+				before_call = Date.now();
+				FastStorage.methods.retrieveData().call({from: response[idx]})
+					.then(function(result){
+						ipfs.get(hash, function(err, res) {
+							if(err) throw new Error(err);
+							const str = hash.length + " " + before_call + " " + (Date.now() - before_call) + "\n";
+							fs.appendFileSync("buffer.txt", str, (err) => { throw new Error(err); });
+						});
+					}).catch(err => { throw new Error(err); });
+			}).catch(err => { throw new Error(err); });
 	});
-	/*
-	FastStorage.methods.storeData(hash).send({from : response[idx], gas: (3000000 + fee)}).once('receipt', function(receipt){
-		fs.appendFileSync("buffer.txt", hash.length + " " + before_call + " " + receipt.transactionHash + "\n", (err) => {
-			throw new Error(err);
-		});
-
-		before_call = Date.now();
-		FastStorage.methods.retrieveData().call({from: response[idx]}).then(function(result){
-			ipfs_ret = ipfs.get(result, function(err, files){
-				throw new Error(err);
-				fs.appendFileSync("buffer.txt", hash.length + " " + before_call + " " + (Date.now() - before_call) + "\n", (err) => {
-					throw new Error(err);
-				});
-			});
-		}).catch(err => { throw new Error(err); });
-
-	}).catch(err => { throw new Error(err); });*/
 }
 
 web3.eth.getAccounts().then(response => {
@@ -69,7 +64,7 @@ web3.eth.getAccounts().then(response => {
 		gas: 355925
 	}).then((newContractInstance) => {
 		FastStorage.options.address = newContractInstance.options.address
-		var TEST_TIME = 1, TRANS_PER_SEC = 5;
+		var TEST_TIME = 2, TRANS_PER_SEC = 25;
 		var loop = TEST_TIME * TRANS_PER_SEC, hash;
 		for(var i = 0; i < loop; i++){
 			sleep(40); // Sleep for 40 miliseconds
