@@ -17,8 +17,6 @@ def size_to_elapsed(path, title, xl, yl):
         data.append([int(size, 10), float(elapsed_time)])
     storage_size.close()
 
-    data.sort()
-
     x = [v[0] for v in data] # size (Kb)
     y = [v[1] for v in data] # time to block (seconds)
 
@@ -46,8 +44,6 @@ def time_to_elapsed(path, title, xl, yl):
         size, start, elapsed_time, block = line.split(' ')
         data.append([float(start), float(elapsed_time)])
     storage_size.close()
-
-    data.sort()
 
     x = [v[0] for v in data] # elapsed test time (seconds)
     y = [v[1] for v in data] # time to block (seconds)

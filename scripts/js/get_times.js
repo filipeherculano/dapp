@@ -3,7 +3,6 @@ const Web3 = require("web3");
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 
 async function log_retrieve(size, timestamp, elapsed, test) {
-	console.log(test);
 	var str = size + " " + timestamp + " " + elapsed + " -1\n";
 	fs.appendFileSync("build/plot_data/" + test + "_retrieve.txt", str, (err) => {
 		if(err) console.log(err);
@@ -11,7 +10,6 @@ async function log_retrieve(size, timestamp, elapsed, test) {
 }
 
 async function log_store(size, timestamp, tx, test) {
-	console.log(test);
 	var trans = await web3.eth.getTransaction(tx);
 	var block = await web3.eth.getBlock(trans.blockHash);
 
@@ -28,7 +26,6 @@ for (var test of tests) {
 	var path = test + "_buffer.txt";
 
 	if(fs.existsSync(path)) {
-	console.log(path)
 		fs.unlink("build/plot_data/" + test + "_store.txt", (err) => {});
 		fs.unlink("build/plot_data/" + test + "_retrieve.txt", (err) => {});
 

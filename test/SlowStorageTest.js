@@ -1,7 +1,8 @@
 const Web3 = require("web3");
 const fs = require("fs");
 
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+const options = {transactionConfirmationBlocks: 1};
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'), null, options);
 const abi = JSON.parse(fs.readFileSync("build/abi/SlowStorage.abi").toString());
 const SlowStorage = new web3.eth.Contract(abi);
 
@@ -35,9 +36,9 @@ async function process(response) {
 	});
 	const fee = getRandom(0, 118180); // 0.0013 ETH on avarage fee 
 	var before_call = Date.now();
-	SlowStorage.methods.storeData(data).send({from : response[idx], gas: (gasEstimate + fee)}).once('receipt', function(receipt){
+	await SlowStorage.methods.storeData(data).send({from : response[idx], gas: (gasEstimate + fee)}).once('transactionHash', function(transactionHash){
 		stored_idx.push(idx);
-		fs.appendFileSync("SlowStorage_buffer.txt", data.length + " " + before_call + " " + receipt.transactionHash + "\n", (err) => {
+		fs.appendFileSync("SlowStorage_buffer.txt", data.length + " " + before_call + " " + transactionHash + "\n", (err) => {
 			if(err) console.log(err);
 		});
 
@@ -63,7 +64,7 @@ web3.eth.getAccounts().then(response => {
 		gas: 357801
 	}).then((newContractInstance) => {
 		SlowStorage.options.address = newContractInstance.options.address
-		var TEST_TIME = 1, TRANS_PER_SEC = 5;
+		var TEST_TIME = 10, TRANS_PER_SEC = 25;
 		var loop = TEST_TIME * TRANS_PER_SEC, hash;
 		for(var i = 0; i < loop; i++){
 			sleep(40); // Sleep for 40 miliseconds

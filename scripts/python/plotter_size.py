@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import re
 import os
 
 def time_to_size(path, title, xl, yl):
@@ -14,11 +13,20 @@ def time_to_size(path, title, xl, yl):
         line = storage_size.readline()
         if line == '':
             break
-        size = re.split('M', line)
-        data.append([float(timestamp), float(size[0])])
-    storage_size.close()
 
-    data.sort()
+        if(len(line.split('K')) != 1):
+            size = line.split('K')
+            size = size[0].replace(",", ".")
+            data.append([float(timestamp), float(size)/1000.0])
+        elif(len(line.split('M')) != 1):
+            size = line.split('M')
+            size = size[0].replace(",", ".")
+            data.append([float(timestamp), float(size)])
+        elif(len(line.split('G')) != 1):
+            size = line.split('G')
+            size = size[0].replace(",", ".")
+            data.append([float(timestamp), float(size)*1000.0])
+    storage_size.close()
 
     x = [v[0] for v in data] # elapsed test time (seconds)
     y = [v[1] for v in data] # memory usage (Mb)

@@ -62,7 +62,7 @@ web3.eth.getAccounts().then(response => {
 		gas: 355925
 	}).then((newContractInstance) => {
 		FastStorage.options.address = newContractInstance.options.address
-		var TEST_TIME = 1, TRANS_PER_SEC = 5;
+		var TEST_TIME = 10, TRANS_PER_SEC = 25;
 		var loop = TEST_TIME * TRANS_PER_SEC, hash;
 		for(var i = 0; i < loop; i++){
 			sleep(40); // Sleep for 40 miliseconds
