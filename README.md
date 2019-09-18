@@ -1,16 +1,16 @@
-# Instalation
+# Installation
 
 Clone project, enter folder then Install nodejs and npm.
 
 ```
 git clone https://github.com/filipeherculano/dapp
 cd dapp
-sudo apt install nodejs npm python-pip solc
+sudo apt install nodejs npm python3-pip solc
 ```
 
 
 ```
-sudo pip install matplotlib
+sudo pip3 install matplotlib
 ```
 
 Then install truffle framework with npm. But before it, create a truffle folder inside your ~/.config folder. So the installation can run smoothly...
@@ -29,10 +29,6 @@ sudo npm install
 
 This should take a while ...
 
-then, go to Ganache website, download their latest appimage, give all users executable permission
-chmod a+x ~/Downloads/Ganache-2.1.0.AppImage
-sudo ./Downloads/Ganache-.1.0.AppImage
-
 install IPFS by downloading it from page, extracting it and running the script
 
 https://dist.ipfs.io/#go-ipfs
@@ -50,3 +46,18 @@ ipfs daemon
 ipfs swarm peers
 
 ipfs add -r <folder>
+
+# Usage
+
+First you'll need to start the chain and all tests within. They will put their data onto a buffer and build/plot_data/*.txt. The buffer.txt will be used and deleted afterwords.
+
+```
+sudo python3 scripts/python/start_chain.py
+```
+
+Make sure to run get_times.js and plot.py in another terminal, since you must still be running your local blockchain on ganache.
+
+```
+sudo node scripts/js/get_times.py
+sudo python3 scripts/python/plot.py
+```

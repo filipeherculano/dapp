@@ -1,25 +1,50 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import re
+import os
 
-data = []
+def time_to_size(path, title, xl, yl):
+    if(os.path.isfile(path) == False):
+        return
 
-storage_size = open("build/plot_data/slow_storage_size.txt", 'r')
-while True:
-    timestamp = storage_size.readline()
-    line = storage_size.readline()
-    if line == '':
-        break
-    size = line.split('M')
-    data.append([float(timestamp), float(size[0])])
-storage_size.close()
+    data = []
+    storage_size = open(path, 'r')
+    while True:
+        timestamp = storage_size.readline()
+        line = storage_size.readline()
+        if line == '':
+            break
+        size = re.split('M', line)
+        data.append([float(timestamp), float(size[0])])
+    storage_size.close()
 
-data.sort()
+    data.sort()
 
-x = [v[0] for v in data]
-y = [v[1] for v in data]
+    x = [v[0] for v in data] # elapsed test time (seconds)
+    y = [v[1] for v in data] # memory usage (Mb)
 
-x[:] = [v - min(x) for v in x]
-x[:] = [v / 60.0 for v in x]
+    x[:] = [v - min(x) for v in x]
 
-plt.plot(x, y, 'r.')
-plt.show()
+    plt.plot(x, y, 'r.')
+    plt.ylabel(yl)
+    plt.xlabel(xl)
+    plt.title(title)
+
+    plt.show()
+
+def main():
+    # Insert new plotting files here
+    tests = ["SlowStorage", "FastStorageIPFS"]
+    ids = {
+        "SlowStorage": ["Slow Storage Blockchain size", "Elapsed Test Time (s)", "Memory Usage (Mb)"],
+        "FastStorageIPFS": ["Fast Storage Blockchain size", "Elapsed Test Time (s)", "Memory Usage (Mb)"]
+    }
+
+    for test in tests:
+        title = ids[test][0]
+        xlabel = ids[test][1]
+        ylabel = ids[test][2]
+        time_to_size("build/plot_data/" + test + "_size.txt",title, xlabel, ylabel)
+
+if __name__ == '__main__':
+    main()

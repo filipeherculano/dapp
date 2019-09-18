@@ -7,7 +7,12 @@ contract FastStorage {
 		dataBase[msg.sender].push(ipfsHash);
 	}
 
-	function retrieveDataArray(uint256 index) public view returns (string memory){
-		return dataBase[msg.sender][index];
+	function retrieveData() public view returns (string memory){
+		string memory ret = "";
+		if(dataBase[msg.sender].length > 0) {
+			uint256 len = dataBase[msg.sender].length;
+			ret = dataBase[msg.sender][len-1];
+		}
+		return ret;
 	}
 }

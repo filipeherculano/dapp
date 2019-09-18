@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
 import os
+import sys
+
+arg = (sys.argv[1] if len(sys.argv) >= 2 else "")
+paths = ["test/SlowStorageTest.js","test/FastStorageIPFS.js"]
+arg_to_int = {"":0,"ipfs":1}
 
 os.system("sleep 10")
-os.system("sudo node test/SlowStorageTest.js")
-#os.system("sudo node scripts/js/get_times.js")
-#os.system("rm buffer.txt")
+os.system("node " + paths[arg_to_int[arg]])

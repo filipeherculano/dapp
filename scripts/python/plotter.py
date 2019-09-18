@@ -1,26 +1,97 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
-data = []
+# size of the transaction influences time to transaction in block
+def size_to_elapsed(path, title, xl, yl):
+    if(os.path.isfile(path) == False):
+        return
 
-storage_size = open("build/plot_data/slow_storage_tx_time_store.txt", 'r')
-while True:
-    line = storage_size.readline()
-    if line == '':
-        break
-    timestamp, elapsed_time = line.split(' ')
-    data.append([float(timestamp), float(elapsed_time)])
-storage_size.close()
+    data = []
+    storage_size = open(path, 'r')
+    while True:
+        line = storage_size.readline()
+        if line == '':
+            break
+        size, start, elapsed_time, block = line.split(' ')
+        data.append([int(size, 10), float(elapsed_time)])
+    storage_size.close()
 
-data.sort()
+    data.sort()
 
-x = [v[0] for v in data]
-y = [v[1] for v in data]
+    x = [v[0] for v in data] # size (Kb)
+    y = [v[1] for v in data] # time to block (seconds)
 
-x[:] = [v - min(x) for v in x]
-x[:] = [v / 60.0 for v in x]
-y_ = [np.mean(y[0:i]) for i in range(0, len(y))]
+    y[:] = [v - min(y) for v in y]
+    y[:] = [v / 1000.0 for v in y]
 
-plt.bar(x, y)
-plt.plot(x, y_, 'r.')
-plt.show()
+    plt.plot(x, y, 'r.')
+    plt.xlabel(xl)
+    plt.ylabel(yl)
+    plt.title(title)
+
+    plt.show()
+
+# test time influences time to transaction in block
+def time_to_elapsed(path, title, xl, yl):
+    if(os.path.isfile(path) == False):
+        return
+
+    data = []
+    storage_size = open(path, 'r')
+    while True:
+        line = storage_size.readline()
+        if line == '':
+            break
+        size, start, elapsed_time, block = line.split(' ')
+        data.append([float(start), float(elapsed_time)])
+    storage_size.close()
+
+    data.sort()
+
+    x = [v[0] for v in data] # elapsed test time (seconds)
+    y = [v[1] for v in data] # time to block (seconds)
+
+    x[:] = [v - min(x) for v in x]
+    x[:] = [v / 1000.0 for v in x]
+
+    plt.plot(x, y, 'r.')
+    plt.xlabel(xl)
+    plt.ylabel(yl)
+    plt.title(title)
+
+    plt.show()
+
+def main():
+    # Insert new plotting files here
+    tests = ["SlowStorage", "FastStorageIPFS"]
+    ids = {
+        "SlowStorage": {
+            "SlowStorage_store.txt" : [
+                ["Slow Storage Store", "Transaction Size (Kb)", "Time To Block (s)"],
+                ["Slow Storage Store", "Elapsed Test Time (s)", "Time To Block (s)"]
+            ],
+            "SlowStorage_retrieve.txt" : [
+                ["Slow Storage Retrieve", "Transaction Size (Kb)", "Time To Block (s)"],
+                ["Slow Storage Retrieve", "Elapsed Test Time (s)", "Time To Block (s)"]
+            ]
+        },
+        "FastStorageIPFS": {
+            "FastStorageIPFS_store.txt" : [
+                ["Fast Storage Store", "Transaction Size (Kb)", "Time To Block (s)"],
+                ["Fast Storage Store", "Elapsed Test Time (s)", "Time To Block (s)"]
+            ],
+            "FastStorageIPFS_retrieve.txt" : [
+                ["Fast Storage Retrieve", "Transaction Size (Kb)", "Time To Block (s)"],
+                ["Fast Storage Retrieve", "Elapsed Test Time (s)", "Time To Block (s)"]
+            ]
+        }
+    }
+
+    for test in tests:
+        for i in range(2):
+            size_to_elapsed("build/plot_data/" + test + "_store.txt", ids[test][test + "_store.txt"][i][0], ids[test][test + "_store.txt"][i][1], ids[test][test + "_store.txt"][i][2])
+            time_to_elapsed("build/plot_data/" + test + "_retrieve.txt", ids[test][test + "_retrieve.txt"][i][0], ids[test][test + "_retrieve.txt"][i][1], ids[test][test + "_retrieve.txt"][i][2])
+
+if __name__ == '__main__':
+    main()
