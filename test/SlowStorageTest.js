@@ -37,13 +37,13 @@ async function process(response) {
 	var before_call = Date.now();
 	SlowStorage.methods.storeData(data).send({from : response[idx], gas: (gasEstimate + fee)}).once('receipt', function(receipt){
 		stored_idx.push(idx);
-		fs.appendFileSync("buffer.txt", data.length + " " + before_call + " " + receipt.transactionHash + "\n", (err) => {
+		fs.appendFileSync("SlowStorage_buffer.txt", data.length + " " + before_call + " " + receipt.transactionHash + "\n", (err) => {
 			if(err) console.log(err);
 		});
 
 		before_call = Date.now();
 		SlowStorage.methods.retrieveDataArray().call({from: response[idx]}).then(function(result){
-			fs.appendFileSync("buffer.txt", data.length + " " + before_call + " " + (Date.now() - before_call) + "\n", (err) => {
+			fs.appendFileSync("SlowStorage_buffer.txt", data.length + " " + before_call + " " + (Date.now() - before_call) / 1000.0 + "\n", (err) => {
 				if(err) console.log(err);
 			});
 		}).catch(err => {
@@ -63,7 +63,7 @@ web3.eth.getAccounts().then(response => {
 		gas: 357801
 	}).then((newContractInstance) => {
 		SlowStorage.options.address = newContractInstance.options.address
-		var TEST_TIME = 5, TRANS_PER_SEC = 25;
+		var TEST_TIME = 1, TRANS_PER_SEC = 5;
 		var loop = TEST_TIME * TRANS_PER_SEC, hash;
 		for(var i = 0; i < loop; i++){
 			sleep(40); // Sleep for 40 miliseconds

@@ -3,19 +3,14 @@
 import os
 import sys
 
-paths = []
+arg = (sys.argv[1] if len(sys.argv) >= 2 else "")
+paths = ["SlowStorage_size.txt","FastStorageIPFS_size.txt"]
+arg_to_int = {"":0,"ipfs":1}
 
-if sys.argv[1] == "":
-    paths.append("SlowStorageTest.txt")
-elif sys.argv[1] == "ipfs":
-    paths.append("FastStorageIPFS.txt")
-else:
-    sys.exit("Unknown parameters")
-
-os.system("sleep 15")
+os.system("sleep 12")
 while(1):
     os.system("mkdir -p build/plot_data/")
-    os.system("touch build/plot_data/"+ paths[0])
-    os.system("date +%s >> build/plot_data/"+ paths[0])
-    os.system("du -h build/chain/ >> build/plot_data/"+ paths[0])
-    os.system("sleep 5")
+    os.system("touch build/plot_data/"+ paths[arg_to_int[arg]])
+    os.system("date +%s >> build/plot_data/"+ paths[arg_to_int[arg]])
+    os.system("du -h build/chain/ >> build/plot_data/"+ paths[arg_to_int[arg]])
+    os.system("sleep 3")

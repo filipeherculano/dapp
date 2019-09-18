@@ -38,21 +38,19 @@ async function process(response) {
 	ipfs.add(Buffer.from(data), function(err, res){
 		if(err) throw new Error(err);
 		const hash = res[0].hash;
-		FastStorage.methods.storeData(hash).send({from : response[idx], gas: (106555 + fee)})
-			.once('receipt', function(receipt){
-				const str = hash.length + " " + before_call + " " + receipt.transactionHash + "\n";
-				fs.appendFileSync("buffer.txt", str, (err) => { throw new Error(err); });
+		FastStorage.methods.storeData(hash).send({from : response[idx], gas: (106555 + fee)}).once('receipt', function(receipt){
+			const str = hash.length + " " + before_call + " " + receipt.transactionHash + "\n";
+			fs.appendFileSync("FastStorageIPFS_buffer.txt", str, (err) => { throw new Error(err); });
 
-				before_call = Date.now();
-				FastStorage.methods.retrieveData().call({from: response[idx]})
-					.then(function(result){
-						ipfs.get(hash, function(err, res) {
-							if(err) throw new Error(err);
-							const str = hash.length + " " + before_call + " " + (Date.now() - before_call) + "\n";
-							fs.appendFileSync("buffer.txt", str, (err) => { throw new Error(err); });
-						});
-					}).catch(err => { throw new Error(err); });
+			before_call = Date.now();
+			FastStorage.methods.retrieveData().call({from: response[idx]}).then(function(result){
+				ipfs.get(hash, function(err, res) {
+					if(err) throw new Error(err);
+					const str = hash.length + " " + before_call + " " + (Date.now() - before_call)/1000.0 + "\n";
+					fs.appendFileSync("FastStorageIPFS_buffer.txt", str, (err) => { throw new Error(err); });
+				});
 			}).catch(err => { throw new Error(err); });
+		}).catch(err => { throw new Error(err); });
 	});
 }
 
@@ -64,7 +62,7 @@ web3.eth.getAccounts().then(response => {
 		gas: 355925
 	}).then((newContractInstance) => {
 		FastStorage.options.address = newContractInstance.options.address
-		var TEST_TIME = 2, TRANS_PER_SEC = 25;
+		var TEST_TIME = 1, TRANS_PER_SEC = 5;
 		var loop = TEST_TIME * TRANS_PER_SEC, hash;
 		for(var i = 0; i < loop; i++){
 			sleep(40); // Sleep for 40 miliseconds
