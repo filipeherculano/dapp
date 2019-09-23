@@ -14,24 +14,18 @@ def size_to_elapsed(path, title, xl, yl):
         if line == '':
             break
         size, start, elapsed_time, block = line.split(' ')
-        data.append([int(size, 10), float(elapsed_time)])
+        data.append(float(elapsed_time))
     storage_size.close()
 
-    x = [v[0] for v in data] # size (Kb)
-    y = [v[1] for v in data] # time to block (seconds)
-
-    y[:] = [v - min(y) for v in y]
-    y[:] = [v / 1000.0 for v in y]
-
-    plt.plot(x, y, 'r.')
+    plt.hist(data, ec='black')
     plt.xlabel(xl)
     plt.ylabel(yl)
     plt.title(title)
+    plt.ylim(0,100)
 
     plt.show()
 
-# test time influences time to transaction in block
-def time_to_elapsed(path, title, xl, yl):
+def tx_per_block(path, title, xl, yl):
     if(os.path.isfile(path) == False):
         return
 
@@ -42,19 +36,16 @@ def time_to_elapsed(path, title, xl, yl):
         if line == '':
             break
         size, start, elapsed_time, block = line.split(' ')
-        data.append([float(start), float(elapsed_time)])
+        data.append(int(block, 10))
     storage_size.close()
 
-    x = [v[0] for v in data] # elapsed test time (seconds)
-    y = [v[1] for v in data] # time to block (seconds)
+    x, y = np.unique(np.array(data), return_counts=True)
 
-    x[:] = [v - min(x) for v in x]
-    x[:] = [v / 1000.0 for v in x]
-
-    plt.plot(x, y, 'r.')
+    plt.bar(x, y, ec='black')
     plt.xlabel(xl)
     plt.ylabel(yl)
     plt.title(title)
+    plt.ylim(0,60)
 
     plt.show()
 
@@ -64,30 +55,30 @@ def main():
     ids = {
         "SlowStorage": {
             "SlowStorage_store.txt" : [
-                ["Slow Storage Store", "Transaction Size (Kb)", "Time To Block (s)"],
-                ["Slow Storage Store", "Elapsed Test Time (s)", "Time To Block (s)"]
+                ["Frequência de Tempo de Publicação em Slow Storage Store", "Time to Block (s)", "Frequência"],
+                ["Número de Transações por Bloco Slow Storage Store", "Block Number", "Number of Transactions"]
             ],
             "SlowStorage_retrieve.txt" : [
-                ["Slow Storage Retrieve", "Transaction Size (Kb)", "Time To Block (s)"],
-                ["Slow Storage Retrieve", "Elapsed Test Time (s)", "Time To Block (s)"]
+                ["Frequência de Tempo de Publicação em Slow Storage Retrieve", "time to block (s)", "Frequência"],
             ]
         },
         "FastStorageIPFS": {
             "FastStorageIPFS_store.txt" : [
-                ["Fast Storage Store", "Transaction Size (Kb)", "Time To Block (s)"],
-                ["Fast Storage Store", "Elapsed Test Time (s)", "Time To Block (s)"]
+                ["Frequência de Tempo de Publicação em Fast Storage Store", "Time to Block (s)", "Frequência"],
+                ["Número de Transações por Bloco Fast Storage Store", "Block Number", "Number of Transactions"]
             ],
             "FastStorageIPFS_retrieve.txt" : [
-                ["Fast Storage Retrieve", "Transaction Size (Kb)", "Time To Block (s)"],
-                ["Fast Storage Retrieve", "Elapsed Test Time (s)", "Time To Block (s)"]
+                ["Frequência de Tempo de Publicação em Fast Storage Retrieve", "time to block (s)", "Frequência"],
             ]
         }
     }
 
     for test in tests:
-        for i in range(2):
-            size_to_elapsed("build/plot_data/" + test + "_store.txt", ids[test][test + "_store.txt"][i][0], ids[test][test + "_store.txt"][i][1], ids[test][test + "_store.txt"][i][2])
-            time_to_elapsed("build/plot_data/" + test + "_retrieve.txt", ids[test][test + "_retrieve.txt"][i][0], ids[test][test + "_retrieve.txt"][i][1], ids[test][test + "_retrieve.txt"][i][2])
+        store_file = test + "_store.txt"
+        retrieve_file = test + "_retrieve.txt"
+        size_to_elapsed("build/plot_data/" + test + "_store.txt", ids[test][store_file][0][0], ids[test][store_file][0][1], ids[test][store_file][0][2])
+        tx_per_block("build/plot_data/" + test + "_store.txt", ids[test][store_file][1][0], ids[test][store_file][1][1], ids[test][store_file][1][2])
+        size_to_elapsed("build/plot_data/" + test + "_retrieve.txt", ids[test][retrieve_file][0][0], ids[test][retrieve_file][0][1], ids[test][retrieve_file][0][2])
 
 if __name__ == '__main__':
     main()

@@ -33,10 +33,11 @@ def time_to_size(path, title, xl, yl):
 
     x[:] = [v - min(x) for v in x]
 
-    plt.plot(x, y, 'r.')
+    plt.plot(x, y, '-.r')
     plt.ylabel(yl)
     plt.xlabel(xl)
     plt.title(title)
+    plt.ylim(0, 1300)
 
     plt.show()
 

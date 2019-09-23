@@ -39,7 +39,7 @@ async function process(response) {
 		if(err) throw new Error(err);
 		const hash = res[0].hash;
 		FastStorage.methods.storeData(hash).send({from : response[idx], gas: (106555 + fee)}).once('receipt', function(receipt){
-			const str = hash.length + " " + before_call + " " + receipt.transactionHash + "\n";
+			const str = hash.length/1000.0 + " " + before_call + " " + receipt.transactionHash + "\n";
 			fs.appendFileSync("FastStorageIPFS_buffer.txt", str, (err) => { throw new Error(err); });
 
 			before_call = Date.now();
