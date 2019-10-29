@@ -14,18 +14,8 @@ def time_to_size(path, title, xl, yl):
         if line == '':
             break
 
-        if(len(line.split('K')) != 1):
-            size = line.split('K')
-            size = size[0].replace(",", ".")
-            data.append([float(timestamp), float(size)/1000.0])
-        elif(len(line.split('M')) != 1):
-            size = line.split('M')
-            size = size[0].replace(",", ".")
-            data.append([float(timestamp), float(size)])
-        elif(len(line.split('G')) != 1):
-            size = line.split('G')
-            size = size[0].replace(",", ".")
-            data.append([float(timestamp), float(size)*1000.0])
+        size = line.split('\t')
+        data.append([float(timestamp), float(size[0])/1000.0])
     storage_size.close()
 
     x = [v[0] for v in data] # elapsed test time (seconds)
@@ -36,17 +26,17 @@ def time_to_size(path, title, xl, yl):
     plt.plot(x, y, '-.r')
     plt.ylabel(yl)
     plt.xlabel(xl)
-    plt.title(title)
-    plt.ylim(0, 1300)
+#    plt.title(title)
 
     plt.show()
 
 def main():
     # Insert new plotting files here
-    tests = ["SlowStorage", "FastStorageIPFS"]
+    tests = ["SlowStorage", "FastStorageIPFS", "FastStorageSWARM"]
     ids = {
-        "SlowStorage": ["Slow Storage Blockchain size", "Elapsed Test Time (s)", "Memory Usage (Mb)"],
-        "FastStorageIPFS": ["Fast Storage Blockchain size", "Elapsed Test Time (s)", "Memory Usage (Mb)"]
+        "SlowStorage": ["Slow Storage Blockchain size", "Tempo de Teste (s)", "Uso de Memória (MB)"],
+        "FastStorageIPFS": ["Fast Storage Blockchain size", "Tempo de Teste (s)", "Uso de Memória (MB)"],
+        "FastStorageSWARM": ["Fast Storage Blockchain size", "Tempo de Teste (s)", "Uso de Memória (MB)"]
     }
 
     for test in tests:

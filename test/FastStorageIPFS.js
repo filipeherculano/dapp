@@ -2,7 +2,8 @@ const Web3 = require("web3");
 const fs = require("fs");
 const IPFS = require("ipfs");
 
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+const options = {transactionConfirmationBlocks: 1};
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'), null, options);
 const abi = JSON.parse(fs.readFileSync("build/abi/FastStorageIPFS.abi").toString());
 const FastStorage = new web3.eth.Contract(abi);
 
@@ -49,8 +50,8 @@ async function process(response) {
 					const str = hash.length + " " + before_call + " " + (Date.now() - before_call)/1000.0 + "\n";
 					fs.appendFileSync("FastStorageIPFS_buffer.txt", str, (err) => { throw new Error(err); });
 				});
-			}).catch(err => { throw new Error(err); });
-		}).catch(err => { throw new Error(err); });
+			}).catch(err => { process(response); });
+		}).catch(err => { process(response); });
 	});
 }
 
@@ -62,10 +63,10 @@ web3.eth.getAccounts().then(response => {
 		gas: 355925
 	}).then((newContractInstance) => {
 		FastStorage.options.address = newContractInstance.options.address
-		var TEST_TIME = 10, TRANS_PER_SEC = 25;
+		var TEST_TIME = 50, TRANS_PER_SEC = 8;
 		var loop = TEST_TIME * TRANS_PER_SEC, hash;
 		for(var i = 0; i < loop; i++){
-			sleep(40); // Sleep for 40 miliseconds
+			sleep(125); // Sleep for 125 miliseconds
 			process(response);
 		}
 	}).catch(err => { throw new Error(err); });

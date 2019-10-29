@@ -6,10 +6,13 @@
     "npm": "6.9.x"
   },
   "dependencies": {
+    "@erebos/swarm": "^0.10.0",
+    "@erebos/swarm-node": "^0.10.0",
     "fs": "0.0.1-security",
     "ipfs": "^0.37.1",
     "node-gyp": "^5.0.3",
     "node-pre-gyp": "^0.13.0",
+    "swarm-api": "^0.1.2",
     "web3": "^1.2.1"
   }
 }

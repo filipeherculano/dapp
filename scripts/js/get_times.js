@@ -9,18 +9,18 @@ async function log_retrieve(size, timestamp, elapsed, test) {
 	});
 }
 
-async function log_store(size, timestamp, tx, test) {
+async function log_store(size, timestamp, tx, spent, test) {
 	var trans = await web3.eth.getTransaction(tx);
 	var block = await web3.eth.getBlock(trans.blockHash);
 
-	var str = size + " " + timestamp + " " + (parseInt(block.timestamp, 10)*1000 - timestamp)/1000.0 + " " + block.number + "\n";
+	var str = size + " " + timestamp + " " + (parseInt(block.timestamp, 10)*1000 - timestamp)/1000.0 + " " + block.number + " " + spent + "\n";
 	fs.appendFileSync("build/plot_data/" + test + "_store.txt", str, (err) => {
 		if(err) console.log(err);
 	});
 }
 
 // Increment this array when adding new tests
-tests = ["SlowStorage", "FastStorageIPFS"];
+tests = ["SlowStorage", "FastStorageIPFS", "FastStorageSWARM"];
 
 for (var test of tests) {
 	var path = test + "_buffer.txt";
@@ -35,7 +35,7 @@ for (var test of tests) {
 			if(line.length == 0) break;
 			var words = line.toString().split(" ");
 			if(words[2].length < 12) log_retrieve(words[0], words[1], words[2], test); // If not a transaction hash
-			else log_store(words[0], words[1], words[2], test);
+			else log_store(words[0], words[1], words[2], words[3], test);
 		}
 	}
 }
