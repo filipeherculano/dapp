@@ -2,7 +2,7 @@
 
 import os
 
-contracts = ["SlowStorage", "FastStorageIPFS", "FastStorageSWARM"]
+contracts = ["SlowStorage", "FastStorageIPFS", "FastStorageSWARM", "FastStorageSIA"]
 
 os.system("rm -rf build/abi/ build/bin/")
 os.system("mkdir -p build/abi/ build/bin/")

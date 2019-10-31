@@ -4,8 +4,8 @@ import os
 import sys
 
 arg = (sys.argv[1] if len(sys.argv) >= 2 else "")
-paths = ["SlowStorage_","FastStorageIPFS_","FastStorageSWARM"]
-arg_to_int = {"":0,"ipfs":1,"swarm":2}
+paths = ["SlowStorage_","FastStorageIPFS_","FastStorageSWARM","FastStorageSIA"]
+arg_to_int = {"":0,"ipfs":1,"swarm":2,"sia":3}
 
 if arg == "chain":
     os.system("rm -rf build/chain/")

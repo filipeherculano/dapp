@@ -15,15 +15,18 @@ def size_to_elapsed(path, title, xl, yl):
         if line == '':
             break
         arr = line.split(' ')
-        elapsed_time = arr[2]
-        if len(arr) == 5:
+        print(arr)
+        elapsed_time = int(arr[5])/1000.0 if len(arr) >= 5 else float(arr[2]) + 50.0
+        print(elapsed_time)
+        if len(arr) >= 5:
             gas = arr[4]
             spent.append(int(gas, 10))
         data.append(float(elapsed_time))
     storage_size.close()
 
     print("{}: {}".format(title, np.mean(data)))
-    print("Gasto médio de unidades de gás: {}".format(np.mean(spent)))
+    if spent != []:
+        print("Gasto médio de unidades de gás: {}".format(np.mean(spent)))
     plt.hist(data, ec='black')
     plt.xlabel(xl)
     plt.ylabel(yl)
@@ -41,7 +44,7 @@ def tx_per_block(path, title, xl, yl):
         line = storage_size.readline()
         if line == '':
             break
-        size, start, elapsed_time, block, spent = line.split(' ')
+        size, start, elapsed_time, block, spent, stored_time = line.split(' ')
         data.append(int(block, 10))
     storage_size.close()
 
@@ -58,7 +61,7 @@ def tx_per_block(path, title, xl, yl):
 
 def main():
     # Insert new plotting files here
-    tests = ["SlowStorage", "FastStorageIPFS", "FastStorageSWARM"]
+    tests = ["SlowStorage", "FastStorageIPFS", "FastStorageSWARM", "FastStorageSIA"]
     ids = {
         "SlowStorage": {
             "SlowStorage_store.txt" : [
@@ -84,6 +87,15 @@ def main():
                 ["Número de Transações por Bloco Fast Storage Store", "Número do Bloco", "Número de Transações"]
             ],
             "FastStorageSWARM_retrieve.txt" : [
+                ["Frequência de Tempo de Publicação em Fast Storage Retrieve", "Tempo de Busca (s)", "Frequência"],
+            ]
+        },
+        "FastStorageSIA": {
+            "FastStorageSIA_store.txt" : [
+                ["Frequência de Tempo de Publicação em Fast Storage Store", "Tempo de Publicação em Bloco (s)", "Frequência"],
+                ["Número de Transações por Bloco Fast Storage Store", "Número do Bloco", "Número de Transações"]
+            ],
+            "FastStorageSIA_retrieve.txt" : [
                 ["Frequência de Tempo de Publicação em Fast Storage Retrieve", "Tempo de Busca (s)", "Frequência"],
             ]
         }

@@ -4,8 +4,8 @@ import os
 import sys
 
 arg = (sys.argv[1] if len(sys.argv) >= 2 else "")
-paths = ["SlowStorage_size.txt","FastStorageIPFS_size.txt","FastStorageSWARM_size.txt"]
-arg_to_int = {"":0,"ipfs":1,"swarm":2}
+paths = ["SlowStorage_size.txt","FastStorageIPFS_size.txt","FastStorageSWARM_size.txt","FastStorageSIA_size.txt"]
+arg_to_int = {"":0,"ipfs":1,"swarm":2,"sia":3}
 
 os.system("sleep 12")
 while(1):

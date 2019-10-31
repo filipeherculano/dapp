@@ -15,3 +15,6 @@ os.system("kill -9 $(ps -efo pid,cmd | grep start_timer.py | grep python | awk '
 os.system("kill -9 $(ps -efo pid,cmd | grep start_test.py | grep python | awk '{print $1}')")
 
 os.system("rm *buffer.txt")
+os.system("rm *.bin")
+#os.system("cd ~/Downloads/Sia-v1.4.1.2-linux-amd64/ && ./siac renter delete " + name)
+os.system("sudo rm ~/Downloads/Sia-v1.4.1.2-linux-amd64/img*.bin")

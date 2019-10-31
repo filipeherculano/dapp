@@ -32,11 +32,12 @@ def time_to_size(path, title, xl, yl):
 
 def main():
     # Insert new plotting files here
-    tests = ["SlowStorage", "FastStorageIPFS", "FastStorageSWARM"]
+    tests = ["SlowStorage", "FastStorageIPFS", "FastStorageSWARM", "FastStorageSIA"]
     ids = {
         "SlowStorage": ["Slow Storage Blockchain size", "Tempo de Teste (s)", "Uso de Memória (MB)"],
         "FastStorageIPFS": ["Fast Storage Blockchain size", "Tempo de Teste (s)", "Uso de Memória (MB)"],
-        "FastStorageSWARM": ["Fast Storage Blockchain size", "Tempo de Teste (s)", "Uso de Memória (MB)"]
+        "FastStorageSWARM": ["Fast Storage Blockchain size", "Tempo de Teste (s)", "Uso de Memória (MB)"],
+        "FastStorageSIA": ["Fast Storage Blockchain size", "Tempo de Teste (s)", "Uso de Memória (MB)"]
     }
 
     for test in tests:
